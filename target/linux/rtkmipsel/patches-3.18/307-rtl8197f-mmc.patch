@@ -1,0 +1,47 @@
+diff -urN a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+--- a/drivers/mmc/host/Kconfig	2017-06-12 12:33:39.132996808 +0800
++++ b/drivers/mmc/host/Kconfig	2017-06-12 14:51:36.168009677 +0800
+@@ -4,6 +4,26 @@
+ 
+ comment "MMC/SD/SDIO Host Controller Drivers"
+ 
++menuconfig MMC_RTK_SDMMC
++    tristate "Realtek SD/MMC host driver"
++    help
++      Realtek SD/MMC host support.
++      
++config MMC_RTK_SDMMC_DEBUG
++    bool  "Enable Realtek SD/MMC host driver debug message."
++    depends on MMC_RTK_SDMMC
++    default n
++        help
++          Enable Realtek SD/MMC host driver debug message.
++
++config MMC_RTK_SDMMC_DISABLE_UHS
++	bool  "Disable Realtek SD driver Ultra High Speed support"
++	depends on MMC_RTK_SDMMC	
++	default n
++		help
++			Disable Realtek SD driver Ultra High Speed support
++
++
+ config MMC_ARMMMCI
+ 	tristate "ARM AMBA Multimedia Card Interface support"
+ 	depends on ARM_AMBA
+diff -urN a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+--- a/drivers/mmc/host/Makefile	2017-06-12 12:33:39.132996808 +0800
++++ b/drivers/mmc/host/Makefile	2017-06-12 14:54:23.461148372 +0800
+@@ -76,3 +76,13 @@
+ ifeq ($(CONFIG_CB710_DEBUG),y)
+ 	CFLAGS-cb710-mmc	+= -DDEBUG
+ endif
++
++obj-$(CONFIG_MMC_RTK_SDMMC)		+= rtk-sdmmc.o
++ifeq ($(CONFIG_MMC_RTKEMMC),y)
++obj-$(CONFIG_MMC_RTKEMMC)       	+= rtkemmc.o
++obj-$(CONFIG_MMC_BLOCK)         	+= rtksd_ops.o
++endif
++
++
++
++
